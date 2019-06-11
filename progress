@@ -1,0 +1,29 @@
+#!/bin/bash
+
+for dir in $*
+do
+    fullfile=$dir/output/NonlinearOptimization/misfit
+    if [ -e  $fullfile ]; then
+        count=$(wc -l $fullfile | cut -d ' ' -f 1)
+        echo $(printf "%3d  %s" $count $dir)
+    else
+        echo $(printf "%3d  %s" 0 $dir)
+    fi
+done
+
+
+echo ''
+echo ''
+
+
+for dir in $*
+do
+    fullfile=$dir/output/NonlinearOptimization/*vs*L2
+    if [ -e  $fullfile ]; then
+        count=$(wc -l $fullfile | cut -d ' ' -f 1)
+        echo $(printf "%3d  %s" $((count-1)) $dir)
+    else
+        echo $(printf "%3d  %s" 0 $dir)
+    fi
+done
+

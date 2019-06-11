@@ -1,0 +1,49 @@
+#!/usr/bin/python
+
+import subprocess
+import sys
+
+from os.path import join
+
+import numpy as np
+
+
+if __name__ == '__main__':
+    dirname = sys.argv[1]
+
+    count_iter = 0
+    count_eval = 0
+    iter = []
+    eval = []
+    norm = []
+
+    # read file
+    with open(join(dirname, 'output.optim')) as fileobj:
+        # read header
+        fileobj.readline()
+        fileobj.readline()
+
+        # read starting model
+        line = fileobj.readline()
+        iter += [0]
+        eval += [0]
+        norm += [float(line.split()[-1])]
+
+        # read updated models
+        for line in fileobj.readlines():
+            if line.strip() == '':
+                count_iter += 1
+                iter += [count_iter]
+                eval += [count_eval]
+                norm += [f]
+            else:
+                count_eval += 1
+                f = float(line.split()[-1])
+
+    # print results
+    np.savetxt(dirname +'/'+ 'output/NonlinearOptimization/misfit',norm)
+    np.savetxt(dirname +'/'+ 'output/NonlinearOptimization/eval',eval)
+    np.savetxt(dirname +'/'+ 'output/NonlinearOptimization/step_count',np.hstack((0,np.diff(eval)-1)))
+
+
+

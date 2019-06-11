@@ -1,0 +1,40 @@
+#!/usr/bin/python
+
+import subprocess
+import sys
+
+from os.path import join
+
+import numpy as np
+
+
+def stack(filename):
+    X = np.loadtxt(filename)
+    nr, nc = np.shape(X)
+    print nr, nc
+
+    output = []
+    for ic in range(nc):
+        output += [X[:,ic]]
+    return output
+
+
+if __name__ == '__main__':
+    dirname = sys.argv[1]
+
+    filename = join(dirname, 'output', 'norm_data')
+    iter, eval, norm_data = stack(filename)
+
+    filename = join(dirname, 'output', 'norm_model')
+    _, norm_model = stack(filename)
+
+    filename = join(dirname, 'output', 'norm_gradient')
+    _, norm_gradient = stack(filename)
+    norm_gradient = np.concatenate((norm_gradient,[0]))
+
+    # print results
+    np.savetxt(join('_convergence', dirname),
+        np.column_stack([iter, eval, norm_data, norm_model, norm_gradient]),
+        fmt=['%4d', '%4d', '%10.3e', '%10.3e', '%10.3e'])
+
+
